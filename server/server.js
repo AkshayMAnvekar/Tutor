@@ -44,4 +44,6 @@ app.post('/getfile', (req, res)=>{
 app.get('*', (req, res)=>{
   res.send('My web page');
 })
-app.listen(3000);
+
+const PORT = 3000 || process.env.PORT
+app.listen(PORT);
