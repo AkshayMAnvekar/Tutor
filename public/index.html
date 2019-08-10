@@ -20,14 +20,12 @@
   <input type="text" name="lastname" value="Mouse"><br><br>
   <input type="submit" value="Submit">
 </form> -->
-   <input id="fileupload" name="myfile" type="file" />
-   <input type="button" value="submit" id="submit" onclick="submitform()" />
+<input id="fileupload" name="myfile" type="file" />
+<input type="button" value="submit" id="submit" onclick="submitform()" />
 <textarea id="resultxlsx" rows="40" cols="80">
 </textarea>
 
-
 <script>
-
 function submitform(){
   var uploaded = document.getElementById('fileupload').files;
   var data = new FormData();
@@ -81,6 +79,5 @@ function loadDoc(type) {
   }
 }
 </script>
-
 </body>
 </html>
