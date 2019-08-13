@@ -166,7 +166,7 @@ function fibTutelageTemplate(arrEle, refFib) {
 function mcqTutelageTemplate(arrEle) {
   var xml = '';
   if(arrEle.B !== "NA") {
-    xml += `<feedback name = "${arrEle.B}"><trigger><cond><choice_ref name ="${arrEle.A}"/></cond>`
+    xml += `<feedback name = "${arrEle.B}"><trigger><cond><choice_ref name ="${arrEle.A}"/>==1</cond>`
     xml += `</trigger></feedback>`;
   // console.log("Function", xml);
   }
