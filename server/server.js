@@ -50,7 +50,7 @@ app.post('/getfile', (req, res)=>{
 
 })
 
-async function tutelageFunction(xlsxJSON) {
+function tutelageFunction(xlsxJSON) {
   var options = {indentation: '  ', stripComments: true, collapseContent: true};
 
   var questionObj = {};
@@ -102,12 +102,12 @@ async function tutelageFunction(xlsxJSON) {
 
     if(qType == "FIB" && "E" in arrEle) {
       // var ret = await fibTutelageTemplate(arrEle, refFib);
-      var ret = await fibTutelageTemplate(arrEle, refFib);
+      var ret = fibTutelageTemplate(arrEle, refFib);
       // console.log(pd.xml(ret));
       tutXml = `${tutXml}${ret}`;
     }
     if(qType == 'MCQ' && "E" in arrEle) {
-      var ret = await mcqTutelageTemplate(arrEle);
+      var ret = mcqTutelageTemplate(arrEle);
       // console.log(pd.xml(ret));
       tutXml = `${tutXml}${ret}`;
     }
