@@ -61,6 +61,7 @@ function tutelageFunction(xlsxJSON) {
   var tutRef = '';
   var param = '';
   var refParam = '';
+  var tutID = '';
 
 
   questionObj['prob_tmp_name'] = 'zzzzzz';
@@ -88,6 +89,7 @@ function tutelageFunction(xlsxJSON) {
         tutXml = `<tutelage_tmpl name="${arrEle.B}">`;
         tutRef = `<tutelage_ref name="${arrEle.B}">`;
         // console.log(tutXml);
+        tutID = arrEle.B;
       }
 
       if(arrEle.A.includes('Tutelage Variables') && "B" in arrEle) {
@@ -115,12 +117,12 @@ function tutelageFunction(xlsxJSON) {
   // tutXml += `</tutelage_tmpl>`
   // var final = pd.xml(tutXml);
   // console.log(final);
-  return `${tutXml}${param}${feedBack(xlsxJSON, refFib, qType)}</tutelage_tmpl>${tutRef}${refParam}</tutelage_ref>`;
+  return `${tutXml}${param}${feedBack(xlsxJSON, refFib, qType, tutID)}</tutelage_tmpl>${tutRef}${refParam}</tutelage_ref>`;
   // var final = `${tutXml}${param}${feedBack(xlsxJSON, refFib, qType)}</tutelage_tmpl>${tutRef}${refParam}</tutelage_ref> `;
   // return pd.xml(final);
 }
 
-function feedBack(arrJSON, ref, qType) {
+function feedBack(arrJSON, ref, qType, tutID) {
   var ret = '';
   for(let arr of arrJSON) {
     if(qType == "FIB" && "E" in arr) {
@@ -136,6 +138,15 @@ function feedBack(arrJSON, ref, qType) {
       // tutXml += ret;
       // tutXml = `${tutXml}${ret}`;
     }
+    if(qType == 'FIB/MCQ' && "E" in arr && tutID.includes('M',0)) {
+      console.log('Valid');
+      ret += `${mcqTutelageTemplate(arr)}`;
+    }
+    if(qType == 'FIB/MCQ' && "E" in arr && !tutID.includes('M',0)) {
+      ret += `${fibTutelageTemplate(arr, ref)}`;
+    }
+
+
   }
   return ret;
 }
