@@ -39,12 +39,12 @@ app.post('/getfile', (req, res)=>{
          xlsxJSON = XLSX.utils.sheet_to_json(workbook.Sheets[x], {defVal:""});
          console.log(xlsxJSON);
          let xml = tutelageFunction(xlsxJSON);
-         console.log(xml);
+         console.log(pd.xml(xml));
          tuteXml += tutelageFunction(xlsxJSON);
       }
       return res.send(
-          tuteXml
-          // pd.xml(tuteXml)
+          // tuteXml
+          pd.xml(tuteXml)
       )
 	    });
 
@@ -59,67 +59,85 @@ function tutelageFunction(xlsxJSON) {
   questionObj['paramsArr'] = [];
   var tutXml = '';
   var tutRef = '';
+  var param = '';
+  var refParam = '';
 
 
   questionObj['prob_tmp_name'] = 'zzzzzz';
 
   for(let arrEle of xlsxJSON) {
     // var m = 0;
-    if(arrEle.A.includes('Error Table')) {
-      // console.log("HI");
-      var qType = arrEle.C;
-      // var tGroup = arrEle.B;
-      if("D" in arrEle && typeof arrEle.D == "string") {
-        var forFib1 = arrEle.D;
-        var forFib2 = forFib1.replace(/\s/g,'');
-        var refFib = forFib2.split(',');
+    try {
+      if(arrEle.A.includes('Error Table')) {
+        // console.log("HI");
+        var qType = arrEle.C;
+        // var tGroup = arrEle.B;
+        if("D" in arrEle && typeof arrEle.D == "string") {
+          var forFib1 = arrEle.D;
+          if(typeof arrEle.D !== "number") {
+            var forFib2 = forFib1.replace(/\s/g,'');
+            var refFib = forFib2.split(',');
+          }
+        }
+        if("D" in arrEle && typeof arrEle.D == "number") {
+          refFib = arrEle.D;
+        }
       }
-      if("D" in arrEle && typeof arrEle.D == "number") {
-        refFib = arrEle.D;
+
+    	if(arrEle.A.includes('Tutelage ID')) {
+        tutXml = `<tutelage_tmpl name="${arrEle.B}">`;
+        tutRef = `<tutelage_ref name="${arrEle.B}">`;
+        // console.log(tutXml);
       }
-    }
 
-  	if(arrEle.A.includes('Tutelage ID')) {
-      tutXml = `<tutelage_tmpl name="${arrEle.B}">`;
-      tutRef = `<tutelage_ref name="${arrEle.B}">`;
-      // console.log(tutXml);
-    }
-
-    if(arrEle.A.includes('Tutelage Variables') && "B" in arrEle) {
-      // console.log(arrEle.A)
-      var varSpace = arrEle.B;
-      var varSpace1 = varSpace.replace(/\s/g,'');
-      // console.log(varSpace);
-      var tutVar = varSpace1.split(',');
-      tutXml += `<params>`
-      for(let x of tutVar) {
-        tutXml += `<param name="${x}" type="int"/>`;
-        tutRef += `<bind name="${x}" val="${x}"/>`;
+      if(arrEle.A.includes('Tutelage Variables') && "B" in arrEle) {
+        // console.log(arrEle.A)
+        var varSpace = arrEle.B;
+        var varSpace1 = varSpace.replace(/\s/g,'');
+        var tutVar = varSpace1.split(',');
+        param = `<params>`
+        for(let x of tutVar) {
+          param += `<param name="${x}" type="int"/>`;
+          refParam += `<bind name="${x}" val="${x}"/>`;
+        }
+        param += `</params>`
       }
-      tutXml += `</params>`
-      tutRef += `</tutelage_ref>`;
-    }
+      // refParam += `</tutelage_ref>`;
 
-    if(qType == "FIB" && "E" in arrEle) {
-      // var ret = await fibTutelageTemplate(arrEle, refFib);
-      var ret = fibTutelageTemplate(arrEle, refFib);
-      // console.log(pd.xml(ret));
-      tutXml = `${tutXml}${ret}`;
-    }
-    if(qType == 'MCQ' && "E" in arrEle) {
-      var ret = mcqTutelageTemplate(arrEle);
-      // console.log(pd.xml(ret));
-      tutXml = `${tutXml}${ret}`;
+
     }
 
     // }
+    catch(err) {
+      console.log(err);
+    }
   }
-  // console.log(pd.xml(tutRef));
-  tutXml += `</tutelage_tmpl>`
-  // console.log(tutXml, "END");
-  var final = pd.xml(tutXml);
+  // tutXml += `</tutelage_tmpl>`
+  // var final = pd.xml(tutXml);
   // console.log(final);
-  return `${tutXml}${tutRef}`;
+  return `${tutXml}${param}${feedBack(xlsxJSON, refFib, qType)}</tutelage_tmpl>${tutRef}${refParam}</tutelage_ref>`;
+  // var final = `${tutXml}${param}${feedBack(xlsxJSON, refFib, qType)}</tutelage_tmpl>${tutRef}${refParam}</tutelage_ref> `;
+  // return pd.xml(final);
+}
+
+function feedBack(arrJSON, ref, qType) {
+  var ret = '';
+  for(let arr of arrJSON) {
+    if(qType == "FIB" && "E" in arr) {
+      // var ret = await fibTutelageTemplate(arr, refFib);
+      ret += `${fibTutelageTemplate(arr, ref)}`;
+      // console.log(pd.xml(ret));
+      // tutXml += ret;
+      // tutXml = `${tutXml}${ret}`;
+    }
+    if(qType == 'MCQ' && "E" in arr) {
+      ret += `${mcqTutelageTemplate(arr)}`;
+      // console.log(pd.xml(ret));
+      // tutXml += ret;
+      // tutXml = `${tutXml}${ret}`;
+    }
+  }
+  return ret;
 }
 
 
@@ -130,8 +148,11 @@ function fibTutelageTemplate(arrEle, refFib) {
     // if("E" in arrEle && arrEle.B !== "NA") {
     if(arrEle.B !== "NA") {
       xml += `<feedback name="${arrEle.B}"><trigger>`
-      var y = arrEle.A.replace(/\s/g,'');
-      var z = y.split(/[,;]/);
+      if(typeof arrEle.A !== "number") {
+        // var y = arrEle.A.tostring();
+        var y1 = arrEle.A.replace(/\s/g,'');
+        var z = y1.split(/[,;]/);
+      }
       if(z.length >= 2) {
         if(typeof refFib == "object" && typeof z == "object") {
           for(var i = 0; i < z.length; i++) {
@@ -156,11 +177,14 @@ function fibTutelageTemplate(arrEle, refFib) {
       else {
         xml += `<cond>${z}</cond>`
       }
+      return `${xml}</trigger></feedback>`;
+    }
+    else {
+      return '';
     }
   // }
-  xml += `</trigger></feedback>`;
+  // xml += `</trigger></feedback>`;
   // console.log("Function", xml);
-  return xml;
 }
 
 //
@@ -168,10 +192,13 @@ function mcqTutelageTemplate(arrEle) {
   var xml = '';
   if(arrEle.B !== "NA") {
     xml += `<feedback name = "${arrEle.B}"><trigger><cond><choice_ref name ="${arrEle.A}"/>==1</cond>`
-    xml += `</trigger></feedback>`;
   // console.log("Function", xml);
+  return `${xml}</trigger></feedback>`;
   }
-  return xml;
+  else {
+    return '';
+  }
+  // xml += `</trigger></feedback>`;
 }
 
 app.get('*', (req, res)=>{
