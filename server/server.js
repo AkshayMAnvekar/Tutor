@@ -166,15 +166,19 @@ function fibTutelageTemplate(arrEle, refFib) {
         // var y = arrEle.A.tostring();
         var y1 = arrEle.A.replace(/\s/g,'');
         var z = y1.split(/[,;]/);
+        // console.log(z);
       }
-      if(z.length >= 2) {
-        if(typeof refFib == "object" && typeof z == "object") {
-          for(var i = 0; i < z.length; i++) {
-            if(i < refFib.length) {
-              xml += `<cond><fib_ref name="fib${refFib[i]}"/>==${z[i]}</cond>`
-            }
-            else {
-              xml += `<cond>${z[i]}</cond>`
+      if(typeof z !== "undefined") {
+        // console.log("BUG",z);
+        if(z.length >= 2) {
+          if(typeof refFib == "object" && typeof z == "object") {
+            for(var i = 0; i < z.length; i++) {
+              if(i < refFib.length) {
+                xml += `<cond><fib_ref name="fib${refFib[i]}"/>==${z[i]}</cond>`
+              }
+              else {
+                xml += `<cond>${z[i]}</cond>`
+              }
             }
           }
         }
