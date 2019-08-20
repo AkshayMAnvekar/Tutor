@@ -105,10 +105,7 @@ function tutelageFunction(xlsxJSON) {
         param += `</params>`
       }
       // refParam += `</tutelage_ref>`;
-
-
     }
-
     // }
     catch(err) {
       console.log(err);
@@ -148,6 +145,9 @@ function feedBack(arrJSON, ref, qType, tutID) {
     if(qType == 'SLOT' && "E" in arr) {
       ret += `${slotTutelageTemplate(arr)}`;
     }
+    if(qType == 'NBL' && "E" in arr) {
+      ret += `${nblTutelageTemplate(arr)}`;
+    }
 
 
   }
@@ -162,40 +162,45 @@ function fibTutelageTemplate(arrEle, refFib) {
     // if("E" in arrEle && arrEle.B !== "NA") {
     if(arrEle.B !== "NA") {
       xml += `<feedback name="${arrEle.B}"><trigger>`
-      if(typeof arrEle.A !== "number") {
-        // var y = arrEle.A.tostring();
-        var y1 = arrEle.A.replace(/\s/g,'');
-        var z = y1.split(/[,;]/);
-        // console.log(z);
-      }
-      if(typeof z !== "undefined") {
-        // console.log("BUG",z);
-        if(z.length >= 2) {
-          if(typeof refFib == "object" && typeof z == "object") {
-            for(var i = 0; i < z.length; i++) {
-              if(i < refFib.length) {
-                xml += `<cond><fib_ref name="fib${refFib[i]}"/>==${z[i]}</cond>`
-              }
-              else {
-                xml += `<cond>${z[i]}</cond>`
+      if (!arrEle.A.includes("Other")) {
+        if(typeof arrEle.A !== "number") {
+          // var y = arrEle.A.tostring();
+          var y1 = arrEle.A.replace(/\s/g,'');
+          var z = y1.split(/[,;]/);
+          // console.log(z);
+        }
+        if(typeof z !== "undefined") {
+          // console.log("BUG",z);
+          if(z.length >= 2) {
+            if(typeof refFib == "object" && typeof z == "object") {
+              for(var i = 0; i < z.length; i++) {
+                if(i < refFib.length) {
+                  xml += `<cond><fib_ref name="fib${refFib[i]}"/>==${z[i]}</cond>`
+                }
+                else {
+                  xml += `<cond>${z[i]}</cond>`
+                }
               }
             }
           }
-        }
-        if(typeof refFib == "number" && typeof z == "object"){
-          xml += `<cond><fib_ref name="fib${refFib}"/>==${z[0]}</cond>`
-          for(var i = 1; i < z.length; i++) {
-            xml += `<cond>${z[i]}</cond>`
+          if(typeof refFib == "number" && typeof z == "object"){
+            xml += `<cond><fib_ref name="fib${refFib}"/>==${z[0]}</cond>`
+            for(var i = 1; i < z.length; i++) {
+              xml += `<cond>${z[i]}</cond>`
+            }
           }
         }
-      }
-      else if(typeof refFib == "number"){
-        xml += `<cond><fib_ref name="fib${refFib}"/>==${z}</cond>`
+        else if(typeof refFib == "number"){
+          xml += `<cond><fib_ref name="fib${refFib}"/>==${z}</cond>`
+        }
+        else {
+          xml += `<cond>${z}</cond>`
+        }
+        return `${xml}</trigger></feedback>`;
       }
       else {
-        xml += `<cond>${z}</cond>`
+        return `${xml}</trigger></feedback>`;
       }
-      return `${xml}</trigger></feedback>`;
     }
     else {
       return '';
@@ -237,6 +242,24 @@ function slotTutelageTemplate(arrEle) {
     xml += `<feedback name = "${arrEle.B}"><trigger><cond><slot_ref name="${slotVar[0].replace(/\s/g,'')}"/>.doesNotContainExactly("${slotVar[1].replace(/\s/g,'')}")</cond>`
   // console.log("Function", xml);
   return `${xml}</trigger></feedback>`;
+  }
+  else {
+    return '';
+  }
+  // xml += `</trigger></feedback>`;
+}
+
+function nblTutelageTemplate(arrEle) {
+  var xml = '';
+  if(arrEle.B !== "NA" || arrEle.A !== "Other") {
+    xml += `<feedback name = "${arrEle.B}"><trigger><cond><number_line_ref name="nbl1"/>.doesNotContainExactly("${arrEle.A}")</cond>`
+  console.log("Function", arrEle.A);
+  return `${xml}</trigger></feedback>`;
+  }
+  else if(arrEle.A == "Other") {
+    xml += `<feedback name = "${arrEle.B}">`
+    console.log("Function", xml);
+  return `${xml}</feedback>`;
   }
   else {
     return '';
