@@ -239,7 +239,7 @@ function slotTutelageTemplate(arrEle) {
     // for (let slotEle in slotVarR) {
     //   slotVarR +=
     // }
-    xml += `<feedback name = "${arrEle.B}"><trigger><cond>!<slot_ref name="${slotVar[0].replace(/\s/g,'')}"/>.containExactly("${slotVar[1].replace(/\s/g,'')}")</cond>`
+    xml += `<feedback name = "${arrEle.B}"><trigger><cond>!<slot_ref name="${slotVar[0].replace(/\s/g,'')}"/>.contains("${slotVar[1].replace(/\s/g,'')}")</cond>`
   // console.log("Function", xml);
   return `${xml}</trigger></feedback>`;
   }
