@@ -181,7 +181,16 @@ function fibTutelageTemplate(arrEle, refFib) {
             if(typeof refFib == "object" && typeof z == "object") {
               for(var i = 0; i < z.length; i++) {
                 if(i < refFib.length) {
+                  if(!z[i].includes("Other")) {
                   xml += `<cond><fib_ref name="fib${refFib[i]}"/>==${z[i]}</cond>`
+                  }
+                  else if(z[i].includes("Other")) {
+                    var matches = z[i].match(/\[(.*?)\]/);
+                    // console.log(typeof matches,"AAAAAA");
+                    if(matches != null) {
+                      xml += `<cond>!<fib_ref name="fib${refFib[i]}"/>==${matches[1]}</cond>`
+                    }
+                  }
                 }
                 else {
                   xml += `<cond>${z[i]}</cond>`
