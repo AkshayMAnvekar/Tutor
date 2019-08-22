@@ -71,7 +71,7 @@ function tutelageFunction(xlsxJSON) {
     try {
       if(arrEle.A.includes('Error Table')) {
         // console.log("HI");
-        var qType = arrEle.C;
+        var qType = arrEle.C.toUpperCase();
         // var tGroup = arrEle.B;
         if("D" in arrEle && typeof arrEle.D == "string") {
           var forFib1 = arrEle.D;
