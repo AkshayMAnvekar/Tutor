@@ -188,7 +188,7 @@ function fibTutelageTemplate(arrEle, refFib) {
                     var matches = z[i].match(/\[(.*?)\]/);
                     // console.log(typeof matches,"AAAAAA");
                     if(matches != null) {
-                      xml += `<cond>!<fib_ref name="fib${refFib[i]}"/>==${matches[1]}</cond>`
+                      xml += `<cond><fib_ref name="fib${refFib[i]}"/>!=${matches[1]}</cond>`
                     }
                   }
                 }
