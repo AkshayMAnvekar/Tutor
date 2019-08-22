@@ -148,6 +148,12 @@ function feedBack(arrJSON, ref, qType, tutID) {
     if(qType == 'NBL' && "E" in arr) {
       ret += `${nblTutelageTemplate(arr)}`;
     }
+    if(qType == 'ARR' && "E" in arr) {
+      ret += `${arrTutelageTemplate(arr)}`;
+    }
+    if(qType == 'BOX' && "E" in arr) {
+      ret += `${boxTutelageTemplate(arr)}`;
+    }
 
 
   }
@@ -162,7 +168,7 @@ function fibTutelageTemplate(arrEle, refFib) {
     // if("E" in arrEle && arrEle.B !== "NA") {
     if(arrEle.B !== "NA") {
       xml += `<feedback name="${arrEle.B}"><trigger>`
-      if (!arrEle.A.includes("Other")) {
+      if (arrEle.A !== "Other") {
         if(typeof arrEle.A !== "number") {
           // var y = arrEle.A.tostring();
           var y1 = arrEle.A.replace(/\s/g,'');
@@ -251,7 +257,7 @@ function slotTutelageTemplate(arrEle) {
 
 function nblTutelageTemplate(arrEle) {
   var xml = '';
-  if(arrEle.B !== "NA" || arrEle.A !== "Other") {
+  if(arrEle.B !== "NA" && arrEle.A !== "Other") {
     xml += `<feedback name = "${arrEle.B}"><trigger><cond>!<number_line_ref name="nbl1"/>.contains("${arrEle.A}")</cond>`
   console.log("Function", arrEle.A);
   return `${xml}</trigger></feedback>`;
@@ -265,6 +271,54 @@ function nblTutelageTemplate(arrEle) {
     return '';
   }
   // xml += `</trigger></feedback>`;
+}
+function boxTutelageTemplate(arrEle) {
+  var xml = '';
+  var xml = '';
+  if("E" in arrEle) {
+    if(arrEle.B !== "NA" && arrEle.A !== "Other"){
+      var y1 = arrEle.A.replace(/\s/g,'');
+      var z = y1.split(/[,;=]/);
+      console.log(z);
+      if(z[0].includes("group")) {
+        xml += `<feedback name="${arrEle.B}"><trigger><cond><boxing_ref name="Boxing1" field="group"/>== ${z[1]}</cond><cond><boxing_ref name="Boxing1" field="size"/>== ${z[3]}</cond></trigger></feedback>`
+        console.log(xml);
+      }
+      else if(z[2].includes("group")) {
+        xml += `<feedback name="${arrEle.B}"><trigger><cond><boxing_ref name="Boxing1" field="group"/>== ${z[3]}</cond><cond><boxing_ref name="Boxing1" field="size"/>== ${z[1]}</cond></trigger></feedback>`
+        console.log(xml);
+      }
+    }
+    if (arrEle.B !== "NA" && arrEle.A == "Other") {
+      xml += `<feedback name="${arrEle.B}"></feedback>`
+      console.log(xml);
+    }
+  }
+  return xml;
+
+}
+function arrTutelageTemplate(arrEle) {
+  var xml = '';
+  if("E" in arrEle) {
+    if(arrEle.B !== "NA" && arrEle.A !== "Other"){
+      var y1 = arrEle.A.replace(/\s/g,'');
+      var z = y1.split(/[,;=]/);
+      console.log(z);
+      if(z[0].includes("row")) {
+        xml += `<feedback name="${arrEle.B}"><trigger><cond><array_ref name="Array1" field="row"/>== ${z[1]}</cond><cond><array_ref name="Array1" field="column"/>== ${z[3]}</cond></trigger></feedback>`
+        console.log(xml);
+      }
+      else if(z[2].includes("row")) {
+        xml += `<feedback name="${arrEle.B}"><trigger><cond><array_ref name="Array1" field="row"/>== ${z[3]}</cond><cond><array_ref name="Array1" field="column"/>== ${z[1]}</cond></trigger></feedback>`
+        console.log(xml);
+      }
+    }
+    if (arrEle.B !== "NA" && arrEle.A == "Other") {
+      xml += `<feedback name="${arrEle.B}"></feedback>`
+      console.log(xml);
+    }
+  }
+  return xml;
 }
 
 app.get('*', (req, res)=>{
