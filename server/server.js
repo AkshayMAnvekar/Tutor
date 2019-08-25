@@ -148,11 +148,14 @@ function feedBack(arrJSON, ref, qType, tutID) {
     if(qType == 'NBL' && "E" in arr) {
       ret += `${nblTutelageTemplate(arr)}`;
     }
-    if(qType == 'ARR' && "E" in arr) {
+    if(qType == 'ARR' || qType == 'AWS'  && "E" in arr) {
       ret += `${arrTutelageTemplate(arr)}`;
     }
     if(qType == 'BOX' && "E" in arr) {
       ret += `${boxTutelageTemplate(arr)}`;
+    }
+    if(qType == 'TAPE' && "E" in arr) {
+      ret += `${tapeTutelageTemplate(arr)}`;
     }
 
 
@@ -328,6 +331,65 @@ function arrTutelageTemplate(arrEle) {
     }
   }
   return xml;
+}
+function tapeTutelageTemplate(arrEle) {
+  var xml = '';
+  var xml = '';
+  if("E" in arrEle) {
+    if(arrEle.B !== "NA" && arrEle.A !== "Other"){
+      var y1 = arrEle.A.replace(/\s/g,'');
+      var z = y1.split(/[,;=]/);
+      console.log(z);
+
+
+      if(z[0].includes("Tape")) {
+        if(!z[1].includes("Other") && !z[3].includes("Other")) {
+        xml += `<feedback name="${arrEle.B}"><trigger><cond><tape_ref name=”tape1” />.inOrder(repeat(${z[3]},"${z[1]}"))</cond></trigger></feedback>`
+        console.log(xml);
+        }
+        if(z[1].includes("Other")) {
+          var matches = z[1].match(/\[(.*?)\]/);
+          if(matches != null) {
+            xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name=”tape1” />.inOrder(repeat(${z[3]},"${matches[1]}"))</cond></trigger></feedback>`
+          }
+        console.log(xml);
+        }
+        if(z[3].includes("Other")) {
+          var matches = z[3].match(/\[(.*?)\]/);
+          if(matches != null) {
+            xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name=”tape1” />.inOrder(repeat(${matches[1]},"${z[1]}"))</cond></trigger></feedback>`
+          }
+        console.log(xml);
+        }
+      }
+      else if(z[2].includes("Tape")) {
+        if(!z[1].includes("Other") && !z[3].includes("Other")) {
+        xml += `<feedback name="${arrEle.B}"><trigger><cond><tape_ref name=”tape1” />.inOrder(repeat(${z[1]},"${z[3]}"))</cond></trigger></feedback>`
+        console.log(xml);
+        }
+        if(z[1].includes("Other")) {
+          var matches = z[1].match(/\[(.*?)\]/);
+          if(matches != null) {
+            xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name=”tape1” />.inOrder(repeat(${matches[1]},"${z[3]}"))</cond></trigger></feedback>`
+          }
+        console.log(xml);
+        }
+        if(z[3].includes("Other")) {
+          var matches = z[1].match(/\[(.*?)\]/);
+          if(matches != null) {
+            xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name=”tape1” />.inOrder(repeat(${z[1]},"${matches[1]}"))</cond></trigger></feedback>`
+          }
+        console.log(xml);
+        }
+      }
+    }
+    if (arrEle.B !== "NA" && arrEle.A == "Other") {
+      xml += `<feedback name="${arrEle.B}"></feedback>`
+      console.log(xml);
+    }
+  }
+  return xml;
+
 }
 
 app.get('*', (req, res)=>{
