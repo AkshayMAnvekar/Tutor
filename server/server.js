@@ -160,6 +160,9 @@ function feedBack(arrJSON, ref, qType, tutID) {
     if(qType == 'TAPE' && "E" in arr) {
       ret += `${tapeTutelageTemplate(arr)}`;
     }
+    if(qType == 'BS' && "E" in arr) {
+      ret += `${bsTutelageTemplate(arr)}`;
+    }
 
 
   }
@@ -263,6 +266,25 @@ function slotTutelageTemplate(arrEle) {
     xml += `<feedback name = "${arrEle.B}"><trigger><cond>!<slot_ref name="${slotVar[0].replace(/\s/g,'')}"/>.contains("${slotVar[1].replace(/\s/g,'')}")</cond>`
   // console.log("Function", xml);
   return `${xml}</trigger></feedback>`;
+  }
+  else {
+    return '';
+  }
+  // xml += `</trigger></feedback>`;
+}
+function bsTutelageTemplate(arrEle) {
+  var xml = '';
+  if(arrEle.B !== "NA" && arrEle.A !== "Other") {
+    // var slotVar = arrEle.A.split('≠');
+    // <boxing_shading_ref name=”shading1” />==4
+    xml += `<feedback name = "${arrEle.B}"><trigger><cond><boxing_shading_ref name=”shading1” />==${arrEle.B}</cond>`
+  // console.log("Function", xml);
+  return `${xml}</trigger></feedback>`;
+  }
+  else if(arrEle.A == "Other") {
+    xml += `<feedback name = "${arrEle.B}">`
+    console.log("Function", xml);
+  return `${xml}</feedback>`;
   }
   else {
     return '';
