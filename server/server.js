@@ -148,8 +148,11 @@ function feedBack(arrJSON, ref, qType, tutID) {
     if(qType == 'NBL' && "E" in arr) {
       ret += `${nblTutelageTemplate(arr)}`;
     }
-    if(qType == 'ARR' || qType == 'AWS'  && "E" in arr) {
+    if(qType == 'ARR' && "E" in arr) {
       ret += `${arrTutelageTemplate(arr)}`;
+    }
+    if(qType == 'AWS' && "E" in arr) {
+      ret += `${awsTutelageTemplate(arr)}`;
     }
     if(qType == 'BOX' && "E" in arr) {
       ret += `${boxTutelageTemplate(arr)}`;
@@ -332,6 +335,29 @@ function arrTutelageTemplate(arrEle) {
   }
   return xml;
 }
+function awsTutelageTemplate(arrEle) {
+  var xml = '';
+  if("E" in arrEle) {
+    if(arrEle.B !== "NA" && arrEle.A !== "Other"){
+      var y1 = arrEle.A.replace(/\s/g,'');
+      var z = y1.split(/[,;=]/);
+      console.log(z);
+      if(z[0].includes("row")) {
+        xml += `<feedback name="${arrEle.B}"><trigger><cond><boxing_array_ref name="BoxArr1" field="row"/>== ${z[1]} && <boxing_array_ref name="BoxArr1" field="column"/>== ${z[3]}</cond><cond><boxing_array_ref name="ba1" />.row * <boxing_array_ref name="ba1" />.column==${z[1]}*${z[3]}</cond></trigger></feedback>`
+        console.log(xml);
+      }
+      else if(z[2].includes("row")) {
+        xml += `<feedback name="${arrEle.B}"><trigger><cond><boxing_array_ref name="BoxArr1" field="row"/>== ${z[3]} && <boxing_array_ref name="BoxArr1" field="column"/>== ${z[1]}</cond><cond><boxing_array_ref name="ba1" />.row * <boxing_array_ref name="ba1" />.column==${z[3]}*${z[1]}</cond></trigger></feedback>`
+        console.log(xml);
+      }
+    }
+    if (arrEle.B !== "NA" && arrEle.A == "Other") {
+      xml += `<feedback name="${arrEle.B}"></feedback>`
+      console.log(xml);
+    }
+  }
+  return xml;
+}
 function tapeTutelageTemplate(arrEle) {
   var xml = '';
   var xml = '';
@@ -340,48 +366,54 @@ function tapeTutelageTemplate(arrEle) {
       var y1 = arrEle.A.replace(/\s/g,'');
       var z = y1.split(/[,;=]/);
       console.log(z);
+      let a = `"${z[1]}"`,
+          k = [],
+          b = parseInt(z[3]);
+      while(b>0) {
+        k.push(a);
+        --b;
+        }
+      xml += `<feedback name="${arrEle.B}"><trigger><cond><tape_ref name="tape1" />.inOrder(${k.toString()})</cond></trigger></feedback>`
 
-
-      if(z[0].includes("Tape")) {
-        if(!z[1].includes("Other") && !z[3].includes("Other")) {
-        xml += `<feedback name="${arrEle.B}"><trigger><cond><tape_ref name=”tape1” />.inOrder(repeat(${z[3]},"${z[1]}"))</cond></trigger></feedback>`
-        console.log(xml);
-        }
-        if(z[1].includes("Other")) {
-          var matches = z[1].match(/\[(.*?)\]/);
-          if(matches != null) {
-            xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name=”tape1” />.inOrder(repeat(${z[3]},"${matches[1]}"))</cond></trigger></feedback>`
-          }
-        console.log(xml);
-        }
-        if(z[3].includes("Other")) {
-          var matches = z[3].match(/\[(.*?)\]/);
-          if(matches != null) {
-            xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name=”tape1” />.inOrder(repeat(${matches[1]},"${z[1]}"))</cond></trigger></feedback>`
-          }
-        console.log(xml);
-        }
-      }
-      else if(z[2].includes("Tape")) {
-        if(!z[1].includes("Other") && !z[3].includes("Other")) {
-        xml += `<feedback name="${arrEle.B}"><trigger><cond><tape_ref name=”tape1” />.inOrder(repeat(${z[1]},"${z[3]}"))</cond></trigger></feedback>`
-        console.log(xml);
-        }
-        if(z[1].includes("Other")) {
-          var matches = z[1].match(/\[(.*?)\]/);
-          if(matches != null) {
-            xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name=”tape1” />.inOrder(repeat(${matches[1]},"${z[3]}"))</cond></trigger></feedback>`
-          }
-        console.log(xml);
-        }
-        if(z[3].includes("Other")) {
-          var matches = z[1].match(/\[(.*?)\]/);
-          if(matches != null) {
-            xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name=”tape1” />.inOrder(repeat(${z[1]},"${matches[1]}"))</cond></trigger></feedback>`
-          }
-        console.log(xml);
-        }
-      }
+      // if(z[0].includes("Tape")) {
+      //   if(!z[1].includes("Other") && !z[3].includes("Other")) {
+      //   console.log(xml);
+      //   }
+      //   if(z[1].includes("Other")) {
+      //     var matches = z[1].match(/\[(.*?)\]/);
+      //     if(matches != null) {
+      //       xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name="tape1" />.inOrder(repeat(${z[3]},"${matches[1]}"))</cond></trigger></feedback>`
+      //     }
+      //   console.log(xml);
+      //   }
+      //   if(z[3].includes("Other")) {
+      //     var matches = z[3].match(/\[(.*?)\]/);
+      //     if(matches != null) {
+      //       xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name="tape1" />.inOrder(repeat(${matches[1]},"${z[1]}"))</cond></trigger></feedback>`
+      //     }
+      //   console.log(xml);
+      //   }
+      // }
+      // else if(z[2].includes("Tape")) {
+      //   if(!z[1].includes("Other") && !z[3].includes("Other")) {
+      //   xml += `<feedback name="${arrEle.B}"><trigger><cond><tape_ref name="tape1" />.inOrder(repeat(${z[1]},"${z[3]}"))</cond></trigger></feedback>`
+      //   console.log(xml);
+      //   }
+      //   if(z[1].includes("Other")) {
+      //     var matches = z[1].match(/\[(.*?)\]/);
+      //     if(matches != null) {
+      //       xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name="tape1" />.inOrder(repeat(${matches[1]},"${z[3]}"))</cond></trigger></feedback>`
+      //     }
+      //   console.log(xml);
+      //   }
+      //   if(z[3].includes("Other")) {
+      //     var matches = z[1].match(/\[(.*?)\]/);
+      //     if(matches != null) {
+      //       xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name="tape1" />.inOrder(repeat(${z[1]},"${matches[1]}"))</cond></trigger></feedback>`
+      //     }
+      //   console.log(xml);
+      //   }
+      // }
     }
     if (arrEle.B !== "NA" && arrEle.A == "Other") {
       xml += `<feedback name="${arrEle.B}"></feedback>`
