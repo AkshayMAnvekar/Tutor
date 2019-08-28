@@ -277,7 +277,7 @@ function bsTutelageTemplate(arrEle) {
   if(arrEle.B !== "NA" && arrEle.A !== "Other") {
     // var slotVar = arrEle.A.split('≠');
     // <boxing_shading_ref name="shading1"/>==4
-    xml += `<feedback name = "${arrEle.B}"><trigger><cond><boxing_shading_ref name="shading1"/>==${arrEle.B}</cond>`
+    xml += `<feedback name = "${arrEle.B}"><trigger><cond><boxing_shading_ref name="shading1"/>==${arrEle.A}</cond>`
   // console.log("Function", xml);
   return `${xml}</trigger></feedback>`;
   }
