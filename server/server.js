@@ -388,9 +388,9 @@ function tapeTutelageTemplate(arrEle) {
       var y1 = arrEle.A.replace(/\s/g,'');
       var z = y1.split(/[,;=]/);
       console.log(z);
-      let a = `"${z[1]}"`,
+      let a = `"${z[3]}"`,
           k = [],
-          b = parseInt(z[3]);
+          b = parseInt(z[1]);
       while(b>0) {
         k.push(a);
         --b;
