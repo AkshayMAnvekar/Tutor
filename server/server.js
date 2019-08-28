@@ -365,11 +365,11 @@ function awsTutelageTemplate(arrEle) {
       var z = y1.split(/[,;=]/);
       console.log(z);
       if(z[0].includes("row")) {
-        xml += `<feedback name="${arrEle.B}"><trigger><cond><boxing_array_ref name="BoxArr1" field="row"/>== ${z[1]} && <boxing_array_ref name="BoxArr1" field="column"/>== ${z[3]}</cond><cond><boxing_array_ref name="ba1" />.row * <boxing_array_ref name="ba1" />.column==${z[1]}*${z[3]}</cond></trigger></feedback>`
+        xml += `<feedback name="${arrEle.B}"><trigger><cond><boxing_array_ref name="BoxArr1"/>.row== ${z[1]}</cond><cond><boxing_array_ref name="BoxArr1"/>.column== ${z[3]}</cond></trigger></feedback>`
         console.log(xml);
       }
       else if(z[2].includes("row")) {
-        xml += `<feedback name="${arrEle.B}"><trigger><cond><boxing_array_ref name="BoxArr1" field="row"/>== ${z[3]} && <boxing_array_ref name="BoxArr1" field="column"/>== ${z[1]}</cond><cond><boxing_array_ref name="ba1" />.row * <boxing_array_ref name="ba1" />.column==${z[3]}*${z[1]}</cond></trigger></feedback>`
+        xml += `<feedback name="${arrEle.B}"><trigger><cond><boxing_array_ref name="BoxArr1"/>.row== ${z[3]}</cond><cond><boxing_array_ref name="BoxArr1"/>.column== ${z[1]}</cond></trigger></feedback>`
         console.log(xml);
       }
     }
