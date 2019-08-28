@@ -276,8 +276,8 @@ function bsTutelageTemplate(arrEle) {
   var xml = '';
   if(arrEle.B !== "NA" && arrEle.A !== "Other") {
     // var slotVar = arrEle.A.split('≠');
-    // <boxing_shading_ref name=”shading1” />==4
-    xml += `<feedback name = "${arrEle.B}"><trigger><cond><boxing_shading_ref name=”shading1” />==${arrEle.B}</cond>`
+    // <boxing_shading_ref name="shading1"/>==4
+    xml += `<feedback name = "${arrEle.B}"><trigger><cond><boxing_shading_ref name="shading1"/>==${arrEle.B}</cond>`
   // console.log("Function", xml);
   return `${xml}</trigger></feedback>`;
   }
@@ -365,11 +365,11 @@ function awsTutelageTemplate(arrEle) {
       var z = y1.split(/[,;=]/);
       console.log(z);
       if(z[0].includes("row")) {
-        xml += `<feedback name="${arrEle.B}"><trigger><cond><boxing_array_ref name="BoxArr1" field="row"/>== ${z[1]} && <boxing_array_ref name="BoxArr1" field="column"/>== ${z[3]}</cond><cond><boxing_array_ref name="ba1" />.row * <boxing_array_ref name="ba1" />.column==${z[1]}*${z[3]}</cond></trigger></feedback>`
+        xml += `<feedback name="${arrEle.B}"><trigger><cond><boxing_array_ref name="BoxArr1" field="row"/>== ${z[1]} && <boxing_array_ref name="BoxArr1" field="column"/>== ${z[3]}</cond><cond><boxing_array_ref name="ba1"/>.row * <boxing_array_ref name="ba1"/>.column==${z[1]}*${z[3]}</cond></trigger></feedback>`
         console.log(xml);
       }
       else if(z[2].includes("row")) {
-        xml += `<feedback name="${arrEle.B}"><trigger><cond><boxing_array_ref name="BoxArr1" field="row"/>== ${z[3]} && <boxing_array_ref name="BoxArr1" field="column"/>== ${z[1]}</cond><cond><boxing_array_ref name="ba1" />.row * <boxing_array_ref name="ba1" />.column==${z[3]}*${z[1]}</cond></trigger></feedback>`
+        xml += `<feedback name="${arrEle.B}"><trigger><cond><boxing_array_ref name="BoxArr1" field="row"/>== ${z[3]} && <boxing_array_ref name="BoxArr1" field="column"/>== ${z[1]}</cond><cond><boxing_array_ref name="ba1"/>.row * <boxing_array_ref name="ba1"/>.column==${z[3]}*${z[1]}</cond></trigger></feedback>`
         console.log(xml);
       }
     }
@@ -395,7 +395,7 @@ function tapeTutelageTemplate(arrEle) {
         k.push(a);
         --b;
         }
-      xml += `<feedback name="${arrEle.B}"><trigger><cond><tape_ref name="tape1" />.inOrder(${k.toString()})</cond></trigger></feedback>`
+      xml += `<feedback name="${arrEle.B}"><trigger><cond><tape_ref name="tape1"/>.inOrder(${k.toString()})</cond></trigger></feedback>`
 
       // if(z[0].includes("Tape")) {
       //   if(!z[1].includes("Other") && !z[3].includes("Other")) {
@@ -404,34 +404,34 @@ function tapeTutelageTemplate(arrEle) {
       //   if(z[1].includes("Other")) {
       //     var matches = z[1].match(/\[(.*?)\]/);
       //     if(matches != null) {
-      //       xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name="tape1" />.inOrder(repeat(${z[3]},"${matches[1]}"))</cond></trigger></feedback>`
+      //       xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name="tape1"/>.inOrder(repeat(${z[3]},"${matches[1]}"))</cond></trigger></feedback>`
       //     }
       //   console.log(xml);
       //   }
       //   if(z[3].includes("Other")) {
       //     var matches = z[3].match(/\[(.*?)\]/);
       //     if(matches != null) {
-      //       xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name="tape1" />.inOrder(repeat(${matches[1]},"${z[1]}"))</cond></trigger></feedback>`
+      //       xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name="tape1"/>.inOrder(repeat(${matches[1]},"${z[1]}"))</cond></trigger></feedback>`
       //     }
       //   console.log(xml);
       //   }
       // }
       // else if(z[2].includes("Tape")) {
       //   if(!z[1].includes("Other") && !z[3].includes("Other")) {
-      //   xml += `<feedback name="${arrEle.B}"><trigger><cond><tape_ref name="tape1" />.inOrder(repeat(${z[1]},"${z[3]}"))</cond></trigger></feedback>`
+      //   xml += `<feedback name="${arrEle.B}"><trigger><cond><tape_ref name="tape1"/>.inOrder(repeat(${z[1]},"${z[3]}"))</cond></trigger></feedback>`
       //   console.log(xml);
       //   }
       //   if(z[1].includes("Other")) {
       //     var matches = z[1].match(/\[(.*?)\]/);
       //     if(matches != null) {
-      //       xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name="tape1" />.inOrder(repeat(${matches[1]},"${z[3]}"))</cond></trigger></feedback>`
+      //       xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name="tape1"/>.inOrder(repeat(${matches[1]},"${z[3]}"))</cond></trigger></feedback>`
       //     }
       //   console.log(xml);
       //   }
       //   if(z[3].includes("Other")) {
       //     var matches = z[1].match(/\[(.*?)\]/);
       //     if(matches != null) {
-      //       xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name="tape1" />.inOrder(repeat(${z[1]},"${matches[1]}"))</cond></trigger></feedback>`
+      //       xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name="tape1"/>.inOrder(repeat(${z[1]},"${matches[1]}"))</cond></trigger></feedback>`
       //     }
       //   console.log(xml);
       //   }
