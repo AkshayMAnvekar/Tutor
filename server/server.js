@@ -295,7 +295,7 @@ function bsTutelageTemplate(arrEle) {
 function nblTutelageTemplate(arrEle) {
   var xml = '';
   if(arrEle.B !== "NA" && arrEle.A !== "Other") {
-    xml += `<feedback name = "${arrEle.B}"><trigger><cond>!<number_line_ref name="nbl1"/>.contains("${arrEle.A}")</cond>`
+    xml += `<feedback name = "${arrEle.B}"><trigger><cond><number_line_ref name="nbl1"/>.containsExactly("${arrEle.A}")</cond>`
   console.log("Function", arrEle.A);
   return `${xml}</trigger></feedback>`;
   }
