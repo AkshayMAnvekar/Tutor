@@ -114,7 +114,8 @@ function tutelageFunction(xlsxJSON) {
   // tutXml += `</tutelage_tmpl>`
   // var final = pd.xml(tutXml);
   // console.log(final);
-  return `${tutXml}${param}${feedBack(xlsxJSON, refFib, qType, tutID)}</tutelage_tmpl>${tutRef}${refParam}</tutelage_ref>`;
+  return `${tutXml}${param}${feedBack(xlsxJSON, refFib, qType, tutID)}</tutelage_tmpl>`;
+  // return `${tutXml}${param}${feedBack(xlsxJSON, refFib, qType, tutID)}</tutelage_tmpl>${tutRef}${refParam}</tutelage_ref>`;
   // var final = `${tutXml}${param}${feedBack(xlsxJSON, refFib, qType)}</tutelage_tmpl>${tutRef}${refParam}</tutelage_ref> `;
   // return pd.xml(final);
 }
