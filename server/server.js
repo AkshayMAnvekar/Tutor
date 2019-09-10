@@ -166,6 +166,12 @@ function feedBack(arrJSON, ref, qType, tutID) {
     if(qType == 'BS' && "E" in arr) {
       ret += `${bsTutelageTemplate(arr)}`;
     }
+    if(qType == 'BG' && "E" in arr) {
+      ret += `${bgTutelageTemplate(arr)}`;
+    }
+    if(qType == 'LP' && "E" in arr) {
+      ret += `${lpTutelageTemplate(arr)}`;
+    }
   }
   return ret;
 }
@@ -414,7 +420,7 @@ function awsTutelageTemplate(arrEle) {
 }
 function tapeTutelageTemplate(arrEle) {
   var xml = '';
-  var xml = '';
+  // var xml = '';
   if("E" in arrEle) {
     if(arrEle.B !== "NA" && arrEle.A !== "Other"){
       var y1 = arrEle.A.replace(/\s/g,'');
@@ -429,45 +435,6 @@ function tapeTutelageTemplate(arrEle) {
         }
       xml += `<feedback name="${arrEle.B}"><trigger><cond><tape_ref name="tape1"/>.inOrder(${k.toString()})</cond></trigger></feedback>`
 
-      // if(z[0].includes("Tape")) {
-      //   if(!z[1].includes("Other") && !z[3].includes("Other")) {
-      //   console.log(xml);
-      //   }
-      //   if(z[1].includes("Other")) {
-      //     var matches = z[1].match(/\[(.*?)\]/);
-      //     if(matches != null) {
-      //       xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name="tape1"/>.inOrder(repeat(${z[3]},"${matches[1]}"))</cond></trigger></feedback>`
-      //     }
-      //   console.log(xml);
-      //   }
-      //   if(z[3].includes("Other")) {
-      //     var matches = z[3].match(/\[(.*?)\]/);
-      //     if(matches != null) {
-      //       xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name="tape1"/>.inOrder(repeat(${matches[1]},"${z[1]}"))</cond></trigger></feedback>`
-      //     }
-      //   console.log(xml);
-      //   }
-      // }
-      // else if(z[2].includes("Tape")) {
-      //   if(!z[1].includes("Other") && !z[3].includes("Other")) {
-      //   xml += `<feedback name="${arrEle.B}"><trigger><cond><tape_ref name="tape1"/>.inOrder(repeat(${z[1]},"${z[3]}"))</cond></trigger></feedback>`
-      //   console.log(xml);
-      //   }
-      //   if(z[1].includes("Other")) {
-      //     var matches = z[1].match(/\[(.*?)\]/);
-      //     if(matches != null) {
-      //       xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name="tape1"/>.inOrder(repeat(${matches[1]},"${z[3]}"))</cond></trigger></feedback>`
-      //     }
-      //   console.log(xml);
-      //   }
-      //   if(z[3].includes("Other")) {
-      //     var matches = z[1].match(/\[(.*?)\]/);
-      //     if(matches != null) {
-      //       xml += `<feedback name="${arrEle.B}"><trigger><cond>!<tape_ref name="tape1"/>.inOrder(repeat(${z[1]},"${matches[1]}"))</cond></trigger></feedback>`
-      //     }
-      //   console.log(xml);
-      //   }
-      // }
     }
     if (arrEle.B !== "NA" && arrEle.A == "Other") {
       xml += `<feedback name="${arrEle.B}"></feedback>`
@@ -476,6 +443,60 @@ function tapeTutelageTemplate(arrEle) {
   }
   return xml;
 
+}
+
+function bgTutelageTemplate(arrEle) {
+  var xml = '';
+  if ("E" in arrEle) {
+    if (arrEle.B !== "NA" && arrEle.A !== "Other") {
+      xml = `<feedback name="${arrEle.B}"><trigger>`
+      var y1 = arrEle.A.replace(/\s/g, '');
+      var z = y1.split("||");
+      xml += `<cond>`;
+      for (let i = 0; i < z.length; i++) {
+        var be = z[i].split("≠");
+        console.log(be);
+        xml += `<bar_ref name="bar1"/>.columnHeightAtXIndex(${be[0]})==${be[1]}`;
+        if (i !== (z.length - 1)) {
+          xml += ` || `;
+        }
+      }
+      console.log(xml);
+      xml += `</cond></trigger ></feedback >`;
+    }
+    if (arrEle.A.includes("Other")) {
+      xml += `<feedback name="${arrEle.B}"></feedback>`
+      console.log(xml);
+    }
+  }
+  return xml;
+}
+
+function lpTutelageTemplate(arrEle) {
+  var xml = '';
+  if ("E" in arrEle) {
+    if (arrEle.B !== "NA" && arrEle.A !== "Other") {
+      xml = `<feedback name="${arrEle.B}"><trigger>`
+      var y1 = arrEle.A.replace(/\s/g, '');
+      var z = y1.split("||");
+      xml += `<cond>`;
+      for (let i = 0; i < z.length; i++) {
+        var be = z[i].split("≠");
+        console.log(be);
+        xml += `<bar_ref name="bar1"/>.columCountAtXValue(${be[0]})==${be[1]}`;
+        if (i !== (z.length - 1)) {
+          xml += ` || `;
+        }
+      }
+      console.log(xml);
+      xml += `</cond></trigger ></feedback >`;
+    }
+    if (arrEle.A.includes("Other")) {
+      xml += `<feedback name="${arrEle.B}"></feedback>`
+      console.log(xml);
+    }
+  }
+  return xml;
 }
 
 app.get('*', (req, res)=>{
