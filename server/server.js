@@ -69,6 +69,7 @@ function tutelageFunction(xlsxJSON) {
   for(let arrEle of xlsxJSON) {
     // var m = 0;
     try {
+      if (typeof arrEle.A !== "number") {
       if(arrEle.A.includes('Error Table')) {
         // console.log("HI");
         var qType = arrEle.C.toUpperCase();
@@ -106,6 +107,7 @@ function tutelageFunction(xlsxJSON) {
       }
       // refParam += `</tutelage_ref>`;
     }
+  }
     // }
     catch(err) {
       console.log(err);
@@ -132,9 +134,9 @@ function feedBack(arrJSON, ref, qType, tutID) {
     }
     if(qType == 'MCQ' && "E" in arr) {
       ret += `${mcqTutelageTemplate(arr)}`;
-      // console.log(pd.xml(ret));
-      // tutXml += ret;
-      // tutXml = `${tutXml}${ret}`;
+    }
+    if(qType == 'MANS' && "E" in arr) {
+      ret += `${mansTutelageTemplate(arr)}`;
     }
     if(qType == 'FIB/MCQ' && "E" in arr && tutID.includes('M',0)) {
       console.log('Valid');
@@ -164,8 +166,6 @@ function feedBack(arrJSON, ref, qType, tutID) {
     if(qType == 'BS' && "E" in arr) {
       ret += `${bsTutelageTemplate(arr)}`;
     }
-
-
   }
   return ret;
 }
@@ -173,66 +173,73 @@ function feedBack(arrJSON, ref, qType, tutID) {
 
 function fibTutelageTemplate(arrEle, refFib) {
   var xml = '';
-  // console.log("In Function",arrEle);
-  // for(let arrEle of xlsxJSON) {
-    // if("E" in arrEle && arrEle.B !== "NA") {
-    if(arrEle.B !== "NA") {
-      xml += `<feedback name="${arrEle.B}"><trigger>`
-      if (arrEle.A !== "Other") {
-        if(typeof arrEle.A !== "number") {
-          // var y = arrEle.A.tostring();
-          var y1 = arrEle.A.replace(/\s/g,'');
-          var z = y1.split(/[,;]/);
-          // console.log(z);
+
+  if (arrEle.B !== "NA") {
+    xml += `<feedback name="${arrEle.B}"><trigger>`
+    if (arrEle.A === "Other" || arrEle.B === "_UNCOMMON") {
+      xml = xml.replace("<trigger>", "");
+      return `${xml}</feedback>`;
+    }
+    else if (typeof arrEle.A === "number") {
+      xml += `<cond><fib_ref name="fib${refFib}"/>==${arrEle.A}</cond>`;
+      return `${xml}</trigger></feedback>`;
+    }
+    else if (typeof ref === "number" && !arrEle.A.includes(",") && !arrEle.A.includes("FIB")) {
+      xml += `<cond><fib_ref name="fib${refFib}"/>==${arrEle.A}</cond>`;
+      return `${xml}</trigger></feedback>`;
+    }
+    else if (!arrEle.A.includes(",") && arrEle.A.includes("FIB")) {
+      arrEle.A = arrEle.A.replace(/\s/g, '');
+      arrEle.A = arrEle.A.replace(/(<FIB_)(\d)(>)/g, `<fib_ref name="fib` + "$2" + `"/>`);
+      xml += `<cond>${arrEle.A}</cond>`;
+      return `${xml}</trigger></feedback>`;
+    }
+    else if (arrEle.A.includes(",")) {
+      let fibVal = arrEle.A.replace(/\s/g, '');
+      let fibEle = fibVal.split(',');
+      // console.log(fibEle);
+      if (typeof refFib == "number") {
+        if (!fibEle[0].search("fib")) {
+          xml += `<cond><fib_ref name="fib${refFib}"/>==${fibEle[0]}</cond>`
         }
-        if(typeof z !== "undefined") {
-          // console.log("BUG",z);
-          if(z.length >= 2) {
-            if(typeof refFib == "object" && typeof z == "object") {
-              for(var i = 0; i < z.length; i++) {
-                if(i < refFib.length) {
-                  if(!z[i].includes("Other")) {
-                  xml += `<cond><fib_ref name="fib${refFib[i]}"/>==${z[i]}</cond>`
-                  }
-                  else if(z[i].includes("Other")) {
-                    var matches = z[i].match(/\[(.*?)\]/);
-                    // console.log(typeof matches,"AAAAAA");
-                    if(matches != null) {
-                      xml += `<cond><fib_ref name="fib${refFib[i]}"/>!=${matches[1]}</cond>`
-                    }
-                  }
-                }
-                else {
-                  xml += `<cond>${z[i]}</cond>`
-                }
+        else {
+          fibEle[0] = fibEle[0].replace(/\s/g, '');
+          fibEle[0] = fibEle[0].replace(/(<FIB_)(\d)(>)/g, `<fib_ref name="fib` + "$2" + `"/>`);
+          xml += `<cond>${fibEle[0]}</cond>`;
+        }
+        for (var i = 1; i < fibEle.length; i++) {
+          fibEle[i] = fibEle[i].replace(/\s/g, '');
+          fibEle[i] = fibEle[i].replace(/(<FIB_)(\d)(>)/g, `<fib_ref name="fib` + "$2" + `"/>`);
+          xml += `<cond>${fibEle[i]}</cond>`;
+        }
+      }
+      else {
+        for (let i = 0; i < fibEle.length; i++) {
+          if (i < refFib.length && !fibEle[i].includes("FIB")) {
+            if (!fibEle[i].includes("Other")) {
+              xml += `<cond><fib_ref name="fib${refFib[i]}"/>==${fibEle[i]}</cond>`
+            }
+            else if (fibEle[i].includes("Other")) {
+              var matches = fibEle[i].match(/\[(.*?)\]/);
+              if (matches != null) {
+                xml += `<cond><fib_ref name="fib${refFib[i]}"/>!=${matches[1]}</cond>`
               }
             }
           }
-          if(typeof refFib == "number" && typeof z == "object"){
-            xml += `<cond><fib_ref name="fib${refFib}"/>==${z[0]}</cond>`
-            for(var i = 1; i < z.length; i++) {
-              xml += `<cond>${z[i]}</cond>`
-            }
+          else {
+            fibEle[i] = fibEle[i].replace(/\s/g, '');
+            fibEle[i] = fibEle[i].replace(/(<FIB_)(\d)(>)/g, `<fib_ref name="fib` + "$2" + `"/>`);
+            xml += `<cond>${fibEle[i]}</cond>`;
           }
         }
-        else if(typeof refFib == "number"){
-          xml += `<cond><fib_ref name="fib${refFib}"/>==${z}</cond>`
-        }
-        else {
-          xml += `<cond>${z}</cond>`
-        }
-        return `${xml}</trigger></feedback>`;
       }
-      else {
-        return `${xml}</trigger></feedback>`;
-      }
+
+      return `${xml}</trigger></feedback>`;
     }
-    else {
-      return '';
-    }
-  // }
-  // xml += `</trigger></feedback>`;
-  // console.log("Function", xml);
+  }
+  else {
+    return '';
+  }
 }
 
 //
@@ -242,6 +249,30 @@ function mcqTutelageTemplate(arrEle) {
     xml += `<feedback name = "${arrEle.B}"><trigger><cond><choice_ref name ="${arrEle.A}"/>==1</cond>`
   // console.log("Function", xml);
   return `${xml}</trigger></feedback>`;
+  }
+  else {
+    return '';
+  }
+  // xml += `</trigger></feedback>`;
+}
+function mansTutelageTemplate(arrEle) {
+  var xml = '';
+  if(arrEle.B !== "NA") {
+    if (arrEle.A === "Other" || arrEle.B === "_UNCOMMON") {
+      xml = `<feedback name="${arrEle.B}">`;
+      return `${xml}</feedback>`;
+    }
+    else {
+      let mansVal = arrEle.A.replace(/\s/g, '');
+      let mansEle = mansVal.split(',');
+      xml += `<feedback name = "${arrEle.B}"><trigger>`;
+      for (let i = 0; i < mansEle.length; i++) {
+        xml += `<cond><choice_ref name ="C${i + 1}"/>==${mansEle[i]}</cond>`;
+      }
+      // console.log("Function", xml);
+      return `${xml}</trigger></feedback>`;
+    }
+    
   }
   else {
     return '';
