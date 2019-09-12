@@ -483,7 +483,7 @@ function lpTutelageTemplate(arrEle) {
       for (let i = 0; i < z.length; i++) {
         var be = z[i].split("≠");
         console.log(be);
-        xml += `<bar_ref name="bar1"/>.columCountAtXValue(${be[0]})==${be[1]}`;
+        xml += `<line_plot_ref name="lp1"/>.columCountAtXIndex(${be[0]})==${be[1]}`;
         if (i !== (z.length - 1)) {
           xml += ` || `;
         }
