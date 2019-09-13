@@ -372,6 +372,7 @@ function boxTutelageTemplate(arrEle) {
   return xml;
 
 }
+
 function arrTutelageTemplate(arrEle) {
   var xml = '';
   if("E" in arrEle) {
@@ -395,6 +396,7 @@ function arrTutelageTemplate(arrEle) {
   }
   return xml;
 }
+
 function awsTutelageTemplate(arrEle) {
   var xml = '';
   if("E" in arrEle) {
@@ -418,6 +420,7 @@ function awsTutelageTemplate(arrEle) {
   }
   return xml;
 }
+
 function tapeTutelageTemplate(arrEle) {
   var xml = '';
   // var xml = '';
@@ -456,7 +459,7 @@ function bgTutelageTemplate(arrEle) {
       for (let i = 0; i < z.length; i++) {
         var be = z[i].split("≠");
         console.log(be);
-        xml += `<bar_ref name="bar1"/>.columnHeightAtXIndex(${be[0]})==${be[1]}`;
+        xml += `(!<bar_ref name="bar1"/>.columnHeightAtXIndex(${be[0]})==${be[1]})`;
         if (i !== (z.length - 1)) {
           xml += ` || `;
         }
@@ -483,7 +486,7 @@ function lpTutelageTemplate(arrEle) {
       for (let i = 0; i < z.length; i++) {
         var be = z[i].split("≠");
         console.log(be);
-        xml += `<line_plot_ref name="lp1"/>.columCountAtXIndex(${be[0]})==${be[1]}`;
+        xml += `(!<line_plot_ref name="lp1"/>.columCountAtXIndex(${be[0]})==${be[1]})`;
         if (i !== (z.length - 1)) {
           xml += ` || `;
         }
