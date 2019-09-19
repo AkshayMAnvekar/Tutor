@@ -190,7 +190,7 @@ function fibTutelageTemplate(arrEle, refFib) {
       xml += `<cond><fib_ref name="fib${refFib}"/>==${arrEle.A}</cond>`;
       return `${xml}</trigger></feedback>`;
     }
-    else if (typeof ref === "number" && !arrEle.A.includes(",") && !arrEle.A.includes("FIB")) {
+    else if (typeof refFib === "number" && !arrEle.A.includes(",") && !arrEle.A.includes("FIB")) {
       xml += `<cond><fib_ref name="fib${refFib}"/>==${arrEle.A}</cond>`;
       return `${xml}</trigger></feedback>`;
     }
@@ -459,13 +459,13 @@ function bgTutelageTemplate(arrEle) {
       for (let i = 0; i < z.length; i++) {
         var be = z[i].split("≠");
         console.log(be);
-        xml += `(!<bar_ref name="bar1"/>.columnHeightAtXIndex(${be[0]})==${be[1]})`;
+        xml += `(<bar_ref name="bar1"/>.columnHeightAtXIndex(${be[0]})!=${be[1]})`;
         if (i !== (z.length - 1)) {
           xml += ` || `;
         }
       }
       console.log(xml);
-      xml += `</cond></trigger ></feedback >`;
+      xml += `</cond></trigger></feedback>`;
     }
     if (arrEle.A.includes("Other")) {
       xml += `<feedback name="${arrEle.B}"></feedback>`
@@ -486,13 +486,13 @@ function lpTutelageTemplate(arrEle) {
       for (let i = 0; i < z.length; i++) {
         var be = z[i].split("≠");
         console.log(be);
-        xml += `(!<line_plot_ref name="lp1"/>.columCountAtXIndex(${be[0]})==${be[1]})`;
+        xml += `(<line_plot_ref name="lp1"/>.columnCountAtXIndex(${be[0]})!=${be[1]})`;
         if (i !== (z.length - 1)) {
           xml += ` || `;
         }
       }
       console.log(xml);
-      xml += `</cond></trigger ></feedback >`;
+      xml += `</cond></trigger></feedback>`;
     }
     if (arrEle.A.includes("Other")) {
       xml += `<feedback name="${arrEle.B}"></feedback>`
