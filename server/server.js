@@ -179,7 +179,6 @@ function feedBack(arrJSON, ref, qType, tutID) {
 
 function fibTutelageTemplate(arrEle, refFib) {
   var xml = '';
-
   if (arrEle.B !== "NA") {
     xml += `<feedback name="${arrEle.B}"><trigger>`
     if (arrEle.A === "Other" || arrEle.B === "_UNCOMMON") {
