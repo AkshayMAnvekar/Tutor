@@ -21,7 +21,8 @@
     "pretty-data": "^0.40.0",
     "webpack-hot-middleware": "^2.25.0",
     "webpack-node-externals": "^1.7.2",
-    "xlsx": "^0.15.3"
+    "xlsx": "^0.15.3",
+    "serialize-javascript": ">=2.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",
@@ -35,7 +36,8 @@
     "webpack-cli": "^3.3.10",
     "webpack-dev-middleware": "^3.7.2",
     "webpack-hot-middleware": "^2.25.0",
-    "webpack-node-externals": "^1.7.2"
+    "webpack-node-externals": "^1.7.2",
+    "serialize-javascript": ">=2.1.1"
   },
   "keywords": [],
   "author": "",
