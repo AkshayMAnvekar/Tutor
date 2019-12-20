@@ -288,21 +288,27 @@ function mansTutelageTemplate(arrEle) {
 function slotTutelageTemplate(arrEle) {
   var xml = '';
   if(arrEle.B !== "NA") {
-    var slotVar = arrEle.A.split('≠');
-    // var slotVar1 = slotVar[1].split(',');
-    // var slotVarR = '';
-    // if(typeof slotVar1 == "object") {
-    //
-    //   for (let slotEle in slotVar1) {
-    //     slotVarR +=
-    //   }
-    // }
-    // for (let slotEle in slotVarR) {
-    //   slotVarR +=
-    // }
-    xml += `<feedback name = "${arrEle.B}"><trigger><cond>!<slot_ref name="${slotVar[0].replace(/\s/g,'')}"/>.contains("${slotVar[1].replace(/\s/g,'')}")</cond>`
-  // console.log("Function", xml);
-  return `${xml}</trigger></feedback>`;
+    if (arrEle.A === "Other" || arrEle.B === "_UNCOMMON") {
+      xml = `<feedback name="${arrEle.B}">`;
+      return `${xml}</feedback>`;
+    }
+    else {
+      var slotVar = arrEle.A.split('≠');
+      // var slotVar1 = slotVar[1].split(',');
+      // var slotVarR = '';
+      // if(typeof slotVar1 == "object") {
+      //
+      //   for (let slotEle in slotVar1) {
+      //     slotVarR +=
+      //   }
+      // }
+      // for (let slotEle in slotVarR) {
+      //   slotVarR +=
+      // }
+      xml += `<feedback name = "${arrEle.B}"><trigger><cond>!<slot_ref name="${slotVar[0].replace(/\s/g,'')}"/>.contains("${slotVar[1].replace(/\s/g,'')}")</cond>`
+    // console.log("Function", xml);
+    return `${xml}</trigger></feedback>`;
+    }
   }
   else {
     return '';
